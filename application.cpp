@@ -4,7 +4,7 @@ void Application::start() {
 	srand(time(0));
 	createWindow();
 	
-	for (int i = 0; i < 50; i++) {
+	for (int i = 0; i < Settings::NumberOfBoids; i++) {
 		Boid newBoid = Boid{ (float)((double)rand() / (RAND_MAX)) * Settings::ScreenWidth, (float)((double)rand() / (RAND_MAX)) * Settings::ScreenHeight,(float)(rand() % 101)-50.f,(float)(rand() % 51) - 50.f };
 		boids.push_back(newBoid);
 	}

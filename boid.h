@@ -1,8 +1,12 @@
 #pragma once
+#define _USE_MATH_DEFINES
 #include <SFML/Graphics.hpp>
+
 #include "settings.h"
 #include <iostream>
-#include<cstdlib>
+#include <cstdlib>
+#include <math.h>
+
 class Boid
 {
 private:
@@ -25,7 +29,10 @@ public:
 	void align(std::vector<Boid> boids);
 	void constrainEdges();
 
+	bool isInView(sf::Vector2f otherPos);
+
 	sf::Vector2f limit(sf::Vector2f vec, float size);
 	sf::Vector2f setMagnitude(sf::Vector2f vec, float size);
+	sf::Vector2f scaleVector(sf::Vector2f vec, float size);
 };
 

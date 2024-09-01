@@ -12,27 +12,71 @@ Boid::Boid(float x, float y, float velX, float velY) {
 void Boid::update(float dt) {
 	position += velocity * dt;
 	velocity += acceleration * dt;
-	std::cout << velocity.x << " " << velocity.y << "\n";
+	velocity = limit(velocity, Settings::MaxSpeed);
 }
 
 void Boid::align(std::vector<Boid> boids) {
-	sf::Vector2f avrVec;
+	sf::Vector2f avrVel;
+	sf::Vector2f avrPos;
+	sf::Vector2f avrDif;
+	sf::Vector2f difference;
+
+	sf::Vector2f facing = setMagnitude(velocity, 1);
+
+
 	int totalBoids = 0;
 	for (Boid& boid : boids) {
 		float dist = getDistance(boid);
-		if (dist <= Settings::Distance && dist != 0.f) {
-			avrVec += boid.getVelocity();
-			totalBoids++;
+		if (dist != 0.f) {
+			if (dist <= Settings::Distance && isInView(boid.getPosition())) {
+				avrVel += boid.getVelocity();
+				avrPos += boid.getPosition();
+
+				difference = position - boid.getPosition();
+				difference /= dist;
+				avrDif += difference;
+
+				totalBoids++;
+			}
 		}
+		
 	}
 	if (totalBoids != 0){
-		avrVec /= (float)totalBoids;
-		avrVec = setMagnitude(avrVec, Settings::MaxSpeed);
-		avrVec -= velocity;
-		avrVec = limit(avrVec, Settings::SteeringFactor);
+		avrVel /= (float)totalBoids;
+		avrVel = setMagnitude(avrVel, Settings::MaxSpeed);
+		avrVel -= velocity;
+		avrVel = limit(avrVel, Settings::SteeringFactor);
+
+		avrPos /= (float)totalBoids;
+		avrPos -= position;
+		avrPos = setMagnitude(avrPos, Settings::MaxSpeed);
+		avrPos -= velocity;
+		avrPos = limit(avrPos, Settings::SteeringFactor);
+
+		avrDif /= (float)totalBoids;
+		avrDif = setMagnitude(avrDif, Settings::MaxSpeed);
+		avrDif -= velocity;
+		avrDif = limit(avrDif, Settings::SteeringFactor);
 	}
-	acceleration = avrVec;
-	//std::cout << acceleration.x << " " << acceleration.y<<"\n";
+	acceleration = sf::Vector2f(0, 0);
+	acceleration += avrVel;
+	acceleration += avrPos;
+	acceleration += scaleVector(avrDif,1.5);
+	
+}
+
+bool Boid::isInView(sf::Vector2f otherPos) {
+	
+	sf::Vector2f difference = otherPos - position;
+	float magnitude = sqrt(pow(difference.x, 2) + pow(difference.y, 2));
+	sf::Vector2f unitVelocity = limit(velocity, 1);
+	//Find cos(angle) in radians
+	float cosAngle = (unitVelocity.x * difference.x) + (unitVelocity.y * difference.y);
+	cosAngle /= magnitude;
+	
+	float angle = std::acos(cosAngle);
+	float degrees = angle * (180.0 / M_PI);
+	if (degrees > Settings::Angle) { return false; } else { return true; }
 }
 
 void Boid::constrainEdges() {
@@ -66,8 +110,18 @@ sf::Vector2f Boid::setMagnitude(sf::Vector2f vec, float size) {
 	return (size / magnitude) * vec;
 }
 
+sf::Vector2f Boid::scaleVector(sf::Vector2f vec, float size) {
+	return vec * size;
+}
+
 void Boid::draw(sf::RenderWindow& window) {
 	body.setPosition(sf::Vector2f(position.x - tempRadius, position.y - tempRadius));
+	sf::Vertex line[] =
+	{
+		sf::Vertex(position),
+		sf::Vertex(position + limit(velocity,50))
+	};
+	window.draw(line, 2, sf::Lines);
 	window.draw(body);
 }
 
