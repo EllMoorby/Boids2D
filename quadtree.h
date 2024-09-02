@@ -44,5 +44,6 @@ public:
 	void draw(sf::RenderWindow& window);
 
 	std::vector<Boid> getUserData(std::vector<Point> points);
+	void clear();
 };
 

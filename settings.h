@@ -8,4 +8,5 @@ namespace Settings {
 	extern const float Distance;
 	extern const float SteeringFactor;
 	extern const float MaxSpeed;
+	extern const bool DrawQuadtree;
 }

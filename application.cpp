@@ -22,7 +22,7 @@ void Application::update() {
 	deltaTime = clock.getElapsedTime().asSeconds();
 	clock.restart();
 
-	quadtree = new Quadtree(AABB(Settings::ScreenWidth / 2, Settings::ScreenHeight / 2, Settings::ScreenWidth / 2), Settings::QuadtreeCapacity);
+	quadtree->clear();
 	for (Boid& boid : boids) {
 		quadtree->insert(Point{ boid.getPosition().x, boid.getPosition().y, boid });
 	}
@@ -43,7 +43,8 @@ void Application::update() {
 		boid.update(deltaTime);
 		boid.draw(window);
 	}
-	//quadtree->draw(window);
+	if (Settings::DrawQuadtree) { quadtree->draw(window); }
+	
 	window.display();
 	window.clear();
 }

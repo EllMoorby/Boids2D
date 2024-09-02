@@ -124,3 +124,14 @@ std::vector<Boid> Quadtree::getUserData(std::vector<Point> points) {
 	}
 	return returnVec;
 }
+
+void Quadtree::clear() {
+	if (points.size() != 0) {
+		points.clear();
+	}
+
+	northEast = NULL;
+	northWest = NULL;
+	southEast = NULL;
+	southWest = NULL;
+}
