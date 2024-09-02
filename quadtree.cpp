@@ -1,25 +1,26 @@
 #include "quadtree.h"
 
-AABB::AABB(float x, float y, float halfDimension) {
+AABB::AABB(float x, float y, float halfDimensionx, float halfDimensiony) {
 	this->x = x;
 	this->y = y;
-	this->halfDimension = halfDimension;
+	this->halfDimensionx = halfDimensionx;
+	this->halfDimensiony = halfDimensiony;
 }
 
 bool AABB::containsPoint(Point p) {
-	return (p.x >= x - halfDimension && p.x <= x + halfDimension && p.y >= y - halfDimension && p.y <= y + halfDimension);
+	return (p.x >= x - halfDimensionx && p.x <= x + halfDimensionx && p.y >= y - halfDimensiony && p.y <= y + halfDimensiony);
 }
 
 bool AABB::intersects(AABB& other) {
 	// Check if one square is to the left of the other
-	if (x + halfDimension < other.x - other.halfDimension ||
-		other.x + other.halfDimension < x - halfDimension) {
+	if (x + halfDimensionx < other.x - other.halfDimensionx ||
+		other.x + other.halfDimensionx < x - halfDimensionx) {
 		return false;
 	}
 
 	// Check if one square is above the other
-	if (y + halfDimension < other.y - other.halfDimension ||
-		other.y + other.halfDimension < y - halfDimension) {
+	if (y + halfDimensiony < other.y - other.halfDimensiony ||
+		other.y + other.halfDimensiony < y - halfDimensiony) {
 		return false;
 	}
 
@@ -60,10 +61,10 @@ bool Quadtree::insert(Point p) {
 }
 
 void Quadtree::subdivide() {
-	AABB northEastBoundary(boundary.x - (boundary.halfDimension / 2), (boundary.y - (boundary.halfDimension / 2)), (boundary.halfDimension / 2));
-	AABB northWestBoundary(boundary.x + (boundary.halfDimension / 2), (boundary.y - (boundary.halfDimension / 2)), (boundary.halfDimension / 2));
-	AABB southEastBoundary(boundary.x - (boundary.halfDimension / 2), (boundary.y + (boundary.halfDimension / 2)), (boundary.halfDimension / 2));
-	AABB southWestBoundary(boundary.x + (boundary.halfDimension / 2), (boundary.y + (boundary.halfDimension / 2)), (boundary.halfDimension / 2));
+	AABB northEastBoundary(boundary.x - (boundary.halfDimensionx / 2), (boundary.y - (boundary.halfDimensiony / 2)), (boundary.halfDimensionx / 2), (boundary.halfDimensiony / 2));
+	AABB northWestBoundary(boundary.x + (boundary.halfDimensionx / 2), (boundary.y - (boundary.halfDimensiony / 2)), (boundary.halfDimensionx / 2), (boundary.halfDimensiony / 2));
+	AABB southEastBoundary(boundary.x - (boundary.halfDimensionx / 2), (boundary.y + (boundary.halfDimensiony / 2)), (boundary.halfDimensionx / 2), (boundary.halfDimensiony / 2));
+	AABB southWestBoundary(boundary.x + (boundary.halfDimensionx / 2), (boundary.y + (boundary.halfDimensiony / 2)), (boundary.halfDimensionx / 2), (boundary.halfDimensiony / 2));
 
 	northEast = new Quadtree(northEastBoundary, capacity);
 	northWest = new Quadtree(northWestBoundary, capacity);
@@ -103,8 +104,8 @@ std::vector<Point> Quadtree::queryRange(AABB range) {
 }
 
 void Quadtree::draw(sf::RenderWindow& window) {
-	sf::RectangleShape shape(sf::Vector2f(boundary.halfDimension * 2, boundary.halfDimension * 2));
-	shape.setPosition(sf::Vector2f(boundary.x - boundary.halfDimension, boundary.y - boundary.halfDimension));
+	sf::RectangleShape shape(sf::Vector2f(boundary.halfDimensionx * 2, boundary.halfDimensiony * 2));
+	shape.setPosition(sf::Vector2f(boundary.x - boundary.halfDimensionx, boundary.y - boundary.halfDimensiony));
 	shape.setFillColor(sf::Color::Transparent);
 	shape.setOutlineColor(sf::Color::White);
 	shape.setOutlineThickness(1);

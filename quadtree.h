@@ -17,9 +17,10 @@ class AABB {
 public:
 	float x;
 	float y;
-	float halfDimension;
+	float halfDimensionx;
+	float halfDimensiony;
 
-	AABB(float x, float y, float halfDimension);
+	AABB(float x, float y, float halfDimensionx, float halfDimensiony);
 	bool containsPoint(Point p);
 	bool intersects(AABB& other);
 };
