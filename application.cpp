@@ -2,8 +2,8 @@
 
 void Application::start() {
 	srand(time(0));
+	quadtree = new Quadtree(AABB(Settings::ScreenWidth / 2, Settings::ScreenHeight / 2, Settings::ScreenWidth / 2), Settings::QuadtreeCapacity);
 	createWindow();
-	
 	for (int i = 0; i < Settings::NumberOfBoids; i++) {
 		Boid newBoid = Boid{ (float)((double)rand() / (RAND_MAX)) * Settings::ScreenWidth, (float)((double)rand() / (RAND_MAX)) * Settings::ScreenHeight,(float)(rand() % 101)-50.f,(float)(rand() % 51) - 50.f };
 		boids.push_back(newBoid);
@@ -22,6 +22,11 @@ void Application::update() {
 	deltaTime = clock.getElapsedTime().asSeconds();
 	clock.restart();
 
+	quadtree = new Quadtree(AABB(Settings::ScreenWidth / 2, Settings::ScreenHeight / 2, Settings::ScreenWidth / 2), Settings::QuadtreeCapacity);
+	for (Boid& boid : boids) {
+		quadtree->insert(Point{ boid.getPosition().x, boid.getPosition().y, boid });
+	}
+
 	while (window.pollEvent(event))
 	{
 		switch (event.type) {
@@ -33,10 +38,12 @@ void Application::update() {
 
 	for (Boid& boid : boids) {
 		boid.constrainEdges();
-		boid.align(boids);
+		std::vector<Point> pointsInRange = quadtree->queryRange(AABB(boid.getPosition().x, boid.getPosition().y, Settings::Distance));
+		boid.align(quadtree->getUserData(pointsInRange));
 		boid.update(deltaTime);
 		boid.draw(window);
 	}
+	//quadtree->draw(window);
 	window.display();
 	window.clear();
 }

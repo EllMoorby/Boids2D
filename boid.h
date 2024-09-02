@@ -1,7 +1,6 @@
 #pragma once
 #define _USE_MATH_DEFINES
 #include <SFML/Graphics.hpp>
-
 #include "settings.h"
 #include <iostream>
 #include <cstdlib>
