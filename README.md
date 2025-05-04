@@ -28,7 +28,7 @@ vcpkg install openal-soft freetype
 ### Build
 ```sh
 # Clone the repository
-git clone https://github.com/EllMoorby/Boids2D
+git clone https://github.com/EllMoorby/Boids2D.git
 cd Boids2D
 
 # Build using cmake
