@@ -2,6 +2,9 @@
 
 A small project which implements [boids](https://cs.stanford.edu/people/eroberts/courses/soco/projects/2008-09/modeling-natural-systems/boids.html) and [quadtrees](https://en.wikipedia.org/wiki/Quadtree) in 2D using [SFML](https://www.sfml-dev.org/) in C++.
 
+> [!NOTE]  
+> On Linux VMs (WSL2 etc.) the program may hang, closing then relaunching the program may fix it
+
 <img src="https://github.com/user-attachments/assets/b1cc29bb-42e5-4f54-b5f9-7f017e7112e6" alt="drawing" width="600"/>
 
 ## Building and running on your own machine
