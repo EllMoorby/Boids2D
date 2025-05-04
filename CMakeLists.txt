@@ -12,6 +12,23 @@ FetchContent_Declare(SFML
         SYSTEM)
 FetchContent_MakeAvailable(SFML)
 
+# Patch JoyStick hang on Unix VMs
+set(SFML_JOYSTICK_FIX_FILE "${sfml_SOURCE_DIR}/src/SFML/Window/Unix/JoystickImpl.cpp")
+file(READ "${SFML_JOYSTICK_FIX_FILE}" JOYSTICK_SRC)
+
+# Only patch if not already patched
+string(FIND "${JOYSTICK_SRC}" "return false; // Patched to prevent VM hang" PATCHED_ALREADY)
+if(PATCHED_ALREADY EQUAL -1)
+    message(STATUS "Patching SFML JoystickImpl.cpp to avoid VM hang...")
+
+    string(REPLACE
+            "int monitorFd = udev_monitor_get_fd(udevMonitor);"
+            "return false; // Patched to prevent VM hang\n    int monitorFd = udev_monitor_get_fd(udevMonitor);"
+            JOYSTICK_SRC "${JOYSTICK_SRC}"
+    )
+    file(WRITE "${SFML_JOYSTICK_FIX_FILE}" "${JOYSTICK_SRC}")
+endif()
+
 add_executable(Boids2D src/main.cpp
         src/application.cpp
         src/application.h
