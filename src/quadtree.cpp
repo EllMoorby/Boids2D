@@ -131,8 +131,8 @@ void Quadtree::clear() {
 		points.clear();
 	}
 
-	northEast = NULL;
-	northWest = NULL;
-	southEast = NULL;
-	southWest = NULL;
+	delete northWest; northWest = nullptr;
+	delete northEast; northEast = nullptr;
+	delete southWest; southWest = nullptr;
+	delete southEast; southEast = nullptr;
 }

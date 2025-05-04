@@ -32,10 +32,10 @@ private:
 	AABB boundary;
 	std::vector<Point> points;
 
-	Quadtree* northWest;
-	Quadtree* northEast;
-	Quadtree* southWest;
-	Quadtree* southEast;
+	Quadtree* northWest = nullptr;  // Initialize all to nullptr
+	Quadtree* northEast = nullptr;
+	Quadtree* southWest = nullptr;
+	Quadtree* southEast = nullptr;
 
 public:
 	Quadtree(AABB _boundary, int capacity);
